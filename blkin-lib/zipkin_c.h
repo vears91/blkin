@@ -33,10 +33,10 @@
 #include <stdint.h>
 #include <asm/byteorder.h>
 
-#define BLKIN_TIMESTAMP(trace, endp, evnt)				\
+#define BLKIN_TIMESTAMP(trace, endp, event)				\
 	do {								\
 		struct blkin_annotation __annot;			\
-		blkin_init_timestamp_annotation(&__annot, evnt, endp); \
+		blkin_init_timestamp_annotation(&__annot, event, endp); \
 		blkin_record(trace, &__annot);				\
 	} while (0);
 
@@ -113,7 +113,8 @@ typedef enum {
 /**
  * @typedef blkin_core_annotation
  * Core annotations used by Zipkin used to denote the beginning and end of 
- * client and server spans
+ * client and server spans.
+ * For more information refer to
  * https://github.com/openzipkin/zipkin/blob/master/zipkin-thrift/src/main/thrift/com/twitter/zipkin/zipkinCore.thrift
  */
 typedef enum {

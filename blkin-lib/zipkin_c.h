@@ -33,10 +33,10 @@
 #include <stdint.h>
 #include <asm/byteorder.h>
 
-#define BLKIN_TIMESTAMP(trace, endp, event)				\
+#define BLKIN_TIMESTAMP(trace, endp, evnt)				\
 	do {								\
 		struct blkin_annotation __annot;			\
-		blkin_init_timestamp_annotation(&__annot, event, endp); \
+		blkin_init_timestamp_annotation(&__annot, evnt, endp); \
 		blkin_record(trace, &__annot);				\
 	} while (0);
 
@@ -109,6 +109,24 @@ typedef enum {
     ANNOT_INTEGER,
     ANNOT_TIMESTAMP
 } blkin_annotation_type;
+
+/**
+ * @typedef blkin_core_annotation
+ * Core annotations used by Zipkin used to denote the beginning and end of 
+ * client and server spans
+ */
+typedef enum {
+	CLIENT_SEND=1,
+	CLIENT_RECV,
+	SERVER_SEND,
+	SERVER_RECV,
+	WIRE_SEND,
+	WIRE_RECV,
+	CLIENT_SEND_FRAGMENT,
+	CLIENT_RECV_FRAGMENT,
+	SERVER_SEND_FRAGMENT,
+	SERVER_RECV_FRAGMENT
+} blkin_core_annotation;
 
 /**
  * @struct blkin_annotation
@@ -216,7 +234,6 @@ int blkin_init_string_annotation(struct blkin_annotation *annotation,
  *
  * @returns 0 on success or negative error code
  */
-
 int blkin_init_integer_annotation(struct blkin_annotation *annotation,
 				  const char *key, int64_t val,
 				  const struct blkin_endpoint *endpoint);
@@ -234,6 +251,17 @@ int blkin_init_integer_annotation(struct blkin_annotation *annotation,
 int blkin_init_timestamp_annotation(struct blkin_annotation *annot,
 				    const char *event,
 				    const struct blkin_endpoint *endpoint);
+
+/**
+ * Get the string that represents a Zipkin core annotation
+ *
+ * @param core_annotation The blkin_core_annotation enum value to get the 
+ * corresponding value like "cs" or "sr"
+ *
+ * @returns Core annotation value or "undefined" if the core_annotation is not part of
+ * the blkin_core_annotation enum
+ */
+const char * get_core_annotation_value(blkin_core_annotation core_annotation);
 
 /**
  * Log an annotation in terms of a specific trace

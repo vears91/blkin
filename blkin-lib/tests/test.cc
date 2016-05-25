@@ -34,6 +34,7 @@
 #include <sys/un.h>
 #include <ztracer.hpp>
 #include <iostream>
+#include <stdio.h>
 
 #define SOCK_PATH "socket"
 
@@ -70,14 +71,16 @@ class Parent {
 			
 			for (int i=0;i<10;i++) {
 				/*Init trace*/
-        ZTracer::Trace tr("parent process", &e);
-
+        		ZTracer::Trace tr("parent process", &e);
 				process(tr);
 				
 				wait_response();
-
 				/*Log received*/
-				tr.event("parent end");
+				tr.core_event(SERVER_SEND);
+				tr.keyval("size", t);
+				tr.keyval("string", "hi");	
+				std::cout << "parent end" << std::endl;
+
 			}	
 		}
 
@@ -85,7 +88,9 @@ class Parent {
 		{
 			struct message msg(rand());
 			/*Annotate*/
-			tr.event("parent start");
+			tr.core_event((blkin_core_annotation)SERVER_RECV);
+			std::cout << "parent start" << std::endl;
+
 			/*Set trace info to the message*/
 			msg.trace_info = *tr.get_info();
 			
@@ -152,11 +157,11 @@ class Child {
 			recv(s, &msg, sizeof(struct message), 0);
 			
 			ZTracer::Trace tr("Child process", &e, &msg.trace_info, true);
-			tr.event("child start");
+			tr.core_event((blkin_core_annotation)CLIENT_SEND);
 			
 			usleep(10);
 			std::cout << "Message received : " << msg.actual_message << ::std::endl;
-			tr.event("child end");
+			tr.core_event((blkin_core_annotation)CLIENT_RECV);
 			
 			send(s, "*", 1, 0);
 		}
@@ -199,6 +204,6 @@ int main(int argc, const char *argv[])
 	boost::thread workerThread2(c);
 	workerThread1.join();
 	workerThread2.join();
-
+	getchar();
 	return 0;
 }

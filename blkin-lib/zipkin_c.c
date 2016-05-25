@@ -251,15 +251,33 @@ int blkin_record(const struct blkin_trace *trace,
 			res = -EINVAL;
 			goto OUT;
 		}
-		tracepoint(zipkin, timestamp , trace->name,
-			   endpoint->name, endpoint->port, endpoint->ip,
-			   trace->info.trace_id, trace->info.span_id,
-			   trace->info.parent_span_id,
-			   annotation->val_str);
+		tracepoint(zipkin, timestamp, trace->name,
+			   	endpoint->name, endpoint->port, endpoint->ip,
+			   	trace->info.trace_id, trace->info.span_id,
+			   	trace->info.parent_span_id,
+			   	annotation->val_str);			
 	}
 	res = 0;
 OUT:
 	return res;
+}
+
+const char * get_core_annotation_value(blkin_core_annotation core_annotation)
+{
+	switch (core_annotation)
+	{
+		case CLIENT_SEND: return "cs";
+		case CLIENT_RECV: return "cr";
+		case SERVER_SEND: return "ss";
+		case SERVER_RECV: return "sr";
+		case WIRE_SEND: return "ws";
+		case WIRE_RECV: return "wr";
+		case CLIENT_SEND_FRAGMENT: return "csf";
+		case CLIENT_RECV_FRAGMENT: return "crf";
+		case SERVER_SEND_FRAGMENT: return "ssf";
+		case SERVER_RECV_FRAGMENT: return "srf";
+		default: return "undefined";
+	}
 }
 
 int blkin_get_trace_info(const struct blkin_trace *trace,

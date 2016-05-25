@@ -223,29 +223,32 @@ namespace ZTracer {
 	    }
 
 	// record timestamp annotations
-	void core_event(const blkin_core_annotation core_annotation) const
-	    {
-		if (valid())
-			const char *event = get_core_annotation_value(core_annotation);
-		    BLKIN_TIMESTAMP(this, endpoint, event);
-	    }    
 	void event(const char *event) const
 	    {
 		if (valid())
 		    BLKIN_TIMESTAMP(this, endpoint, event);
 	    }
-	void core_event(const blkin_core_annotation core_annotation, const Endpoint *ep) const
-		{
-		if (valid())
+	void event(blkin_core_annotation core_annotation) const
+	    {
+		if (valid()) 
+			{
 			const char *event = get_core_annotation_value(core_annotation);
-		    BLKIN_TIMESTAMP(this, ep, event);
-		}  
+		    BLKIN_TIMESTAMP(this, endpoint, event);
+			}
+	    }    
 	void event(const char *event, const Endpoint *ep) const
 	    {
 		if (valid())
 		    BLKIN_TIMESTAMP(this, ep, event);
 	    }
-  
+	void event(blkin_core_annotation core_annotation, const Endpoint *ep)
+		{
+		if (valid()) 
+			{
+			const char *event = get_core_annotation_value(core_annotation);
+		    BLKIN_TIMESTAMP(this, ep, event);	
+			}
+		}    
     };
 
 }

@@ -114,6 +114,7 @@ typedef enum {
  * @typedef blkin_core_annotation
  * Core annotations used by Zipkin used to denote the beginning and end of 
  * client and server spans
+ * https://github.com/openzipkin/zipkin/blob/master/zipkin-thrift/src/main/thrift/com/twitter/zipkin/zipkinCore.thrift
  */
 typedef enum {
 	CLIENT_SEND=1,
@@ -259,7 +260,7 @@ int blkin_init_timestamp_annotation(struct blkin_annotation *annot,
  * corresponding value like "cs" or "sr"
  *
  * @returns Core annotation value or "undefined" if the core_annotation is not part of
- * the blkin_core_annotation enum
+ * the blkin_core_annotatiomn enum
  */
 const char * get_core_annotation_value(blkin_core_annotation core_annotation);
 

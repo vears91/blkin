@@ -125,35 +125,6 @@ TRACEPOINT_LOGLEVEL(
 	timestamp,
 	TRACE_WARNING)
 
-/*
-* Tracing with the core annotations defined by Zipkin for client and
-* server spans
-*/
-TRACEPOINT_EVENT(
-	zipkin,
-	timestamp_core,
-	TP_ARGS(const char *, trace_name, const char *, service,
-		int, port, const char *, ip, long, trace,
-		long, span, long, parent_span,
-		const char *, core_annotation,
-		const char *, event),
-
-	TP_FIELDS(
-		ctf_string(trace_name, trace_name)
-		ctf_string(service_name, service)
-		ctf_integer(int, port_no, port)
-		ctf_string(ip, ip)
-		ctf_integer(long, trace_id, trace)
-		ctf_integer(long, span_id, span)
-		ctf_integer(long, parent_span_id, parent_span)
-		ctf_string(core_annotation, core_annotation)
-		ctf_string(event, event)
-		)
-	)
-TRACEPOINT_LOGLEVEL(
-	zipkin,
-	timestamp_core,
-	TRACE_WARNING)
 
 
 #endif /* _ZIPKIN_H */
